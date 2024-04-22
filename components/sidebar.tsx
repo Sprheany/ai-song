@@ -1,0 +1,107 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  Flame,
+  Heart,
+  Layers,
+  ListMusic,
+  Radar,
+  Rss,
+  User,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const navItems = [
+  {
+    title: "Music",
+    items: [
+      {
+        name: "Discover",
+        href: "/",
+        icon: Radar,
+      },
+      {
+        name: "Trending",
+        href: "/trending",
+        icon: Flame,
+      },
+      {
+        name: "Newest",
+        href: "/newest",
+        icon: Rss,
+      },
+      {
+        name: "Categories",
+        href: "/categories",
+        icon: Layers,
+      },
+      {
+        name: "Artists",
+        href: "/artists",
+        icon: User,
+      },
+    ],
+  },
+  {
+    title: "Library",
+    items: [
+      {
+        name: "Playlists",
+        href: "/playlists",
+        icon: ListMusic,
+      },
+      {
+        name: "Liked",
+        href: "/liked",
+        icon: Heart,
+      },
+      {
+        name: "Creations",
+        href: "/creations",
+        icon: User,
+      },
+    ],
+  },
+];
+
+type Props = {
+  className?: string;
+};
+
+const Sidebar = ({ className }: Props) => {
+  const pathname = usePathname();
+
+  return (
+    <div className={cn("pb-12 overflow-y-auto", className)}>
+      <nav className="flex flex-col space-y-4 py-4">
+        {navItems.map((group) => (
+          <div key={group.title} className="px-3 py-2">
+            <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+              {group.title}
+            </h2>
+            <div className="space-y-1">
+              {group.items.map((item) => (
+                <Button
+                  key={item.name}
+                  variant={pathname === item.href ? "secondary" : "ghost"}
+                  className="w-full justify-start"
+                  asChild
+                >
+                  <Link href={item.href}>
+                    <item.icon className="mr-2 h-4 w-4" />
+                    {item.name}
+                  </Link>
+                </Button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;
