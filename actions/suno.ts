@@ -1,5 +1,6 @@
 "use server";
 
+import { Music, SunoMusic } from "@/types/music";
 import { cache } from "react";
 
 const BASE_URL = "https://studio-api.suno.ai/api";
@@ -15,9 +16,21 @@ export const getTrending = cache(async () => {
     }
   );
   const data = await response.json();
-  const clips = data.playlist_clips;
+  const clips = data.playlist_clips as any[];
 
-  return clips as any[];
+  const musics: Music[] = clips.map((item) => {
+    const clip = item.clip as SunoMusic;
+    return {
+      id: clip.id,
+      name: clip.title,
+      artist: clip.display_name,
+      audioUrl: clip.audio_url,
+      coverImage: clip.image_url,
+      duration: clip.metadata.duration,
+    };
+  });
+
+  return musics;
 });
 
 export const getNewest = cache(async () => {
@@ -31,7 +44,19 @@ export const getNewest = cache(async () => {
     }
   );
   const data = await response.json();
-  const clips = data.playlist_clips;
+  const clips = data.playlist_clips as any[];
 
-  return clips as any[];
+  const musics: Music[] = clips.map((item) => {
+    const clip = item.clip as SunoMusic;
+    return {
+      id: clip.id,
+      name: clip.title,
+      artist: clip.display_name,
+      audioUrl: clip.audio_url,
+      coverImage: clip.image_url,
+      duration: clip.metadata.duration,
+    };
+  });
+
+  return musics;
 });

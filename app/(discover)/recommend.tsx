@@ -1,6 +1,6 @@
 import { getTrending } from "@/actions/suno";
+import { AlbumArtwork } from "@/components/album-artwork";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AlbumArtwork } from "../../components/album-artwork";
 
 const Recommend = async () => {
   const trending = await getTrending();
@@ -9,11 +9,10 @@ const Recommend = async () => {
       <ScrollArea>
         <div className="flex space-x-4 pb-4">
           {trending.slice(0, 5).map((item) => {
-            const album = item.clip;
             return (
               <AlbumArtwork
-                key={album.id}
-                album={album}
+                key={item.id}
+                album={item}
                 className="w-[250px]"
                 aspectRatio="portrait"
                 width={250}
