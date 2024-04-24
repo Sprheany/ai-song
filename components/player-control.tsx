@@ -25,6 +25,12 @@ const PlayerControl = ({ className }: Props) => {
     const audio = new Audio(currentMusic?.audioUrl);
     audio.load();
 
+    audio.oncanplay = () => {
+      if (isPlaying) {
+        audio.play();
+      }
+    };
+
     const setAudioData = () => {
       setDuration(audio.duration);
       setTime(audio.currentTime);
