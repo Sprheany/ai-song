@@ -2,7 +2,16 @@
 
 import { cn, formatTime } from "@/lib/utils";
 import { usePlayerStore } from "@/store/player-store";
-import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useUserStore } from "@/store/user-store";
+import {
+  Pause,
+  Play,
+  Repeat,
+  Repeat1,
+  Shuffle,
+  SkipBack,
+  SkipForward,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
@@ -12,24 +21,30 @@ type Props = {
 };
 
 const PlayerControl = ({ className }: Props) => {
-  const { currentMusic, isPlaying, setPlaying, volume, setVolume } =
-    usePlayerStore();
+  const {
+    currentMusic,
+    setMusic,
+    isPlaying,
+    setPlaying,
+    volume,
+    setVolume,
+    shuffle,
+    setShuffle,
+    repeatType,
+    switchRepeatType,
+  } = usePlayerStore();
+  const { playlists } = useUserStore();
 
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [duration, setDuration] = useState(0);
   const [time, setTime] = useState(0);
   const [slider, setSlider] = useState(1);
   const [drag, setDrag] = useState(0);
+  const [hasEnded, setHasEnded] = useState(false);
 
   useEffect(() => {
     const audio = new Audio(currentMusic?.audioUrl);
     audio.load();
-
-    audio.oncanplay = () => {
-      if (isPlaying) {
-        audio.play();
-      }
-    };
 
     const setAudioData = () => {
       setDuration(audio.duration);
@@ -44,9 +59,7 @@ const PlayerControl = ({ className }: Props) => {
       setVolume(audio.volume);
     };
     const setAudioEnded = () => {
-      setPlaying(false);
-      setTime(0);
-      setSlider(0);
+      setHasEnded((v) => !v);
     };
 
     audio.addEventListener("loadeddata", setAudioData);
@@ -61,23 +74,25 @@ const PlayerControl = ({ className }: Props) => {
       audio.removeEventListener("timeupdate", setAudioTime);
       audio.removeEventListener("volumechange", setAudioVolume);
       audio.removeEventListener("ended", setAudioEnded);
-      audio.pause();
+      pause();
       audio.src = "";
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (audio && currentMusic) {
-      audio.src = currentMusic.audioUrl;
+    if (audio) {
+      audio.src = currentMusic?.audioUrl ?? "";
       audio.load();
 
       audio.oncanplay = () => {
-        audio.play();
+        if (isPlaying) {
+          play();
+        }
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMusic]);
+  }, [audio, currentMusic]);
 
   useEffect(() => {
     if (audio) {
@@ -89,6 +104,33 @@ const PlayerControl = ({ className }: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying]);
+
+  useEffect(() => {
+    if (audio) {
+      switch (repeatType) {
+        case "off":
+          pause();
+          break;
+        case "one":
+          audio.currentTime = 0;
+          play();
+          break;
+        case "all":
+          audio.currentTime = 0;
+          if (playlists.length <= 0) {
+            play();
+            return;
+          }
+          if (shuffle) {
+            shufflePlay();
+          } else {
+            next();
+          }
+          break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasEnded]);
 
   useEffect(() => {
     if (audio) {
@@ -117,10 +159,53 @@ const PlayerControl = ({ className }: Props) => {
     }
   };
 
+  const previous = () => {
+    if (playlists.length <= 0) {
+      return;
+    }
+    const index = playlists.findIndex((music) => music.id === currentMusic?.id);
+    const nextIndex = (index - 1 + playlists.length) % playlists.length;
+    setMusic(playlists[nextIndex]);
+  };
+
+  const shufflePlay = () => {
+    if (playlists.length <= 0) {
+      return;
+    }
+    const index = playlists.findIndex((music) => music.id === currentMusic?.id);
+    let rand = index;
+    while (rand === index) {
+      rand = Math.floor(Math.random() * playlists.length);
+    }
+    setMusic(playlists[rand]);
+  };
+
+  const next = () => {
+    if (playlists.length <= 0) {
+      return;
+    }
+    const index = playlists.findIndex((music) => music.id === currentMusic?.id);
+    const nextIndex = (index + 1) % playlists.length;
+    setMusic(playlists[nextIndex]);
+  };
+
   return (
     <div className={cn("flex flex-col items-center justify-center", className)}>
       <div className="flex space-x-2 items-center justify-center">
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn("rounded-full", !shuffle && "opacity-50")}
+          onClick={() => setShuffle(!shuffle)}
+        >
+          <Shuffle className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={previous}
+        >
           <SkipBack />
         </Button>
         <Button
@@ -131,8 +216,25 @@ const PlayerControl = ({ className }: Props) => {
         >
           {isPlaying ? <Pause /> : <Play />}
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={next}
+        >
           <SkipForward />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn("rounded-full", repeatType === "off" && "opacity-50")}
+          onClick={switchRepeatType}
+        >
+          {repeatType === "one" ? (
+            <Repeat1 className="w-4 h-4" />
+          ) : (
+            <Repeat className="w-4 h-4" />
+          )}
         </Button>
       </div>
       <div className="flex w-full items-center space-x-2">
