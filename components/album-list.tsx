@@ -6,6 +6,7 @@ import { useUserStore } from "@/store/user-store";
 import { Music } from "@/types/music";
 import { Disc3, Heart, PlusSquare } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "./ui/button";
 import { Table, TableBody, TableCell, TableRow } from "./ui/table";
 
@@ -72,9 +73,15 @@ const AlbumList = ({ musics }: Props) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col items-start justify-center gap-2">
-                    <p className="text-base font-semibold tracking-tight line-clamp-2">
-                      {item.name}
-                    </p>
+                    <Link
+                      href={`/song/${item.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:underline"
+                    >
+                      <h3 className="text-base font-semibold tracking-tight line-clamp-2">
+                        {item.name}
+                      </h3>
+                    </Link>
                     <p className="text-sm opacity-50 line-clamp-1">
                       {item.artist}
                     </p>

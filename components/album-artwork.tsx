@@ -57,7 +57,7 @@ export function AlbumArtwork({
         </div>
       </div>
       <div className="space-y-1 text-sm">
-        <Link href={`/song/${album.id}`}>
+        <Link href={`/song/${album.id}`} className="hover:underline">
           <h3 className="font-medium leading-none line-clamp-1">
             {album.name}
           </h3>

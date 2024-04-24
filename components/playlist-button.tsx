@@ -5,6 +5,7 @@ import { usePlayerStore } from "@/store/player-store";
 import { Music } from "@/types/music";
 import { ListMusic, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -67,7 +68,13 @@ const PlaylistButton = ({ playlists, cleanPlaylist }: Props) => {
                         className="rounded-md"
                       />
                       <div className="flex-1 flex flex-col">
-                        <p className="text-sm line-clamp-1">{item.name}</p>
+                        <Link
+                          href={`/song/${item.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm line-clamp-1 hover:underline"
+                        >
+                          {item.name}
+                        </Link>
                         <p className="text-xs opacity-50">
                           {formatTime(item.duration)}
                         </p>
