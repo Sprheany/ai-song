@@ -1,71 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { sidebarLinks } from "@/constants/sidebar-links";
 import { cn } from "@/lib/utils";
-import {
-  Flame,
-  Heart,
-  Layers,
-  ListMusic,
-  Radar,
-  Rss,
-  User,
-} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  {
-    title: "Music",
-    items: [
-      {
-        name: "Discover",
-        href: "/",
-        icon: Radar,
-      },
-      {
-        name: "Trending",
-        href: "/trending",
-        icon: Flame,
-      },
-      {
-        name: "Newest",
-        href: "/newest",
-        icon: Rss,
-      },
-      {
-        name: "Categories",
-        href: "/categories",
-        icon: Layers,
-      },
-      {
-        name: "Artists",
-        href: "/artists",
-        icon: User,
-      },
-    ],
-  },
-  {
-    title: "Library",
-    items: [
-      {
-        name: "Playlists",
-        href: "/playlists",
-        icon: ListMusic,
-      },
-      {
-        name: "Liked",
-        href: "/liked",
-        icon: Heart,
-      },
-      {
-        name: "Creations",
-        href: "/creations",
-        icon: User,
-      },
-    ],
-  },
-];
 
 type Props = {
   className?: string;
@@ -77,7 +16,7 @@ const Sidebar = ({ className }: Props) => {
   return (
     <div className={cn("pb-12 overflow-y-auto", className)}>
       <nav className="flex flex-col space-y-4 py-4">
-        {navItems.map((group) => (
+        {sidebarLinks.map((group) => (
           <div key={group.title} className="px-3 py-2">
             <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
               {group.title}

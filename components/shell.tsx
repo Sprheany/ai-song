@@ -9,7 +9,7 @@ const Shell = ({ title, className, children }: Props) => {
   return (
     <main
       className={cn(
-        "w-full flex flex-col p-8 overflow-x-hidden overflow-y-auto",
+        "w-full flex flex-col container mx-auto p-4 lg:p-8 overflow-x-hidden overflow-y-auto",
         className
       )}
     >

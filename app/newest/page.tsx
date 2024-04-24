@@ -1,7 +1,15 @@
-import Shell from "../shell";
+import { getNewest } from "@/actions/suno";
+import AlbumList from "@/components/album-list";
+import Shell from "../../components/shell";
 
-const Page = () => {
-  return <Shell title="Newest"></Shell>;
+const Page = async () => {
+  const data = await getNewest();
+
+  return (
+    <Shell title="Newest">
+      <AlbumList musics={data} />
+    </Shell>
+  );
 };
 
 export default Page;

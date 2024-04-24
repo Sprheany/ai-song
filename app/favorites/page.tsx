@@ -5,10 +5,11 @@ import { useUserStore } from "@/store/user-store";
 import Shell from "../../components/shell";
 
 const Page = () => {
-  const { playlists } = useUserStore();
+  const { favorite } = useUserStore();
+
   return (
-    <Shell title="Playlists">
-      <AlbumList musics={playlists} />
+    <Shell title="Favorites">
+      <AlbumList musics={favorite} />
     </Shell>
   );
 };
