@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getMusicName } from "@/lib/utils";
 import { Music } from "@prisma/client";
 import Image from "next/image";
 
@@ -19,7 +19,7 @@ const PlayerInfo = ({ music, className }: Props) => {
       />
       <div className="flex flex-col h-full justify-around">
         <p className="text-sm font-bold line-clamp-2 tracking-tight">
-          {music.name}
+          {getMusicName(music)}
         </p>
         <p className="text-sm opacity-50 line-clamp-1">{music.artist}</p>
       </div>

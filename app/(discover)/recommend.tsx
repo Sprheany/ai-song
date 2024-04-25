@@ -1,14 +1,14 @@
-import { getTrending } from "@/actions";
+import { getRecommend } from "@/actions";
 import { AlbumArtwork } from "@/components/album-artwork";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const Recommend = async () => {
-  const trending = await getTrending();
+  const trending = await getRecommend();
   return (
     <div className="flex flex-col">
       <ScrollArea>
         <div className="flex space-x-4 pb-4">
-          {trending.slice(0, 5).map((item) => {
+          {trending.map((item) => {
             return (
               <AlbumArtwork
                 key={item.id}

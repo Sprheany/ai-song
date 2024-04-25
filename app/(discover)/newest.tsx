@@ -3,7 +3,7 @@ import { AlbumArtwork } from "@/components/album-artwork";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const Newest = async () => {
-  const trending = await getNewest();
+  const trending = await getNewest(0, 15);
   return (
     <div className="flex flex-col">
       <h2 className="mb-3 text-2xl font-semibold">Newest</h2>
