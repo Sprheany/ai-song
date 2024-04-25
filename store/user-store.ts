@@ -1,4 +1,4 @@
-import { Music } from "@/types/music";
+import { Music } from "@prisma/client";
 import { create } from "zustand";
 
 type UserStoreState = {

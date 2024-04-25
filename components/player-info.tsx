@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Music } from "@/types/music";
+import { Music } from "@prisma/client";
 import Image from "next/image";
 
 type Props = {

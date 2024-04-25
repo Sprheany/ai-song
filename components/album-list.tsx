@@ -3,7 +3,7 @@
 import { cn, formatTime } from "@/lib/utils";
 import { usePlayerStore } from "@/store/player-store";
 import { useUserStore } from "@/store/user-store";
-import { Music } from "@/types/music";
+import { Music } from "@prisma/client";
 import { Disc3, Heart, PlusSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

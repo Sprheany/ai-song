@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { usePlayerStore } from "@/store/player-store";
-import { Music } from "@/types/music";
+import { Music } from "@prisma/client";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

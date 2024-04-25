@@ -1,4 +1,4 @@
-import { getNewest } from "@/actions/suno";
+import { getNewest } from "@/actions";
 import { AlbumArtwork } from "@/components/album-artwork";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 

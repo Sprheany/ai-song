@@ -1,5 +1,5 @@
-import { getTrending } from "@/actions/suno";
-import Shell from "../../components/shell";
+import { getTrending } from "@/actions";
+import Shell from "@/components/shell";
 import Newest from "./newest";
 import Recommend from "./recommend";
 import Trending from "./trending";

@@ -1,6 +1,6 @@
-import { getNewest } from "@/actions/suno";
+import { getNewest } from "@/actions";
 import AlbumList from "@/components/album-list";
-import Shell from "../../components/shell";
+import Shell from "@/components/shell";
 
 const Page = async () => {
   const data = await getNewest();

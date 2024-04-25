@@ -1,4 +1,4 @@
-import { getTrending } from "@/actions/suno";
+import { getTrending } from "@/actions";
 import { AlbumArtwork } from "@/components/album-artwork";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 

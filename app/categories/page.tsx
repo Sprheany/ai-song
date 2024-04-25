@@ -1,4 +1,4 @@
-import Shell from "../../components/shell";
+import Shell from "@/components/shell";
 
 const Page = () => {
   return <Shell title="Categories"></Shell>;

@@ -1,8 +1,8 @@
 "use client";
 
 import AlbumList from "@/components/album-list";
+import Shell from "@/components/shell";
 import { useUserStore } from "@/store/user-store";
-import Shell from "../../components/shell";
 
 const Page = () => {
   const { favorite } = useUserStore();
