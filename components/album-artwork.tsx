@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, getMusicName } from "@/lib/utils";
 import { usePlayerStore } from "@/store/player-store";
 import { Music } from "@prisma/client";
 import { Pause, Play } from "lucide-react";
@@ -26,13 +26,14 @@ export function AlbumArtwork({
   const { currentMusic, setMusic, isPlaying, setPlaying } = usePlayerStore();
 
   const isCurrentPlaying = album.id === currentMusic?.id && isPlaying;
+  const name = getMusicName(album);
 
   return (
     <div className={cn("space-y-3", className)} {...props}>
       <div className={cn("relative group overflow-hidden rounded-md")}>
         <Image
           src={album.coverImage}
-          alt={album.name}
+          alt={name}
           width={width}
           height={height}
           className={cn(
@@ -58,9 +59,7 @@ export function AlbumArtwork({
       </div>
       <div className="space-y-1 text-sm">
         <Link href={`/song/${album.id}`} className="hover:underline">
-          <h3 className="font-medium leading-none line-clamp-1">
-            {album.name}
-          </h3>
+          <h3 className="font-medium leading-none line-clamp-1">{name}</h3>
         </Link>
         <p className="text-sm text-muted-foreground line-clamp-1">
           {album.artist}

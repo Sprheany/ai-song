@@ -12,6 +12,18 @@ export const getMusic = async (id: string) => {
   return data;
 };
 
+export const getMusicByArtist = async (artist: string) => {
+  const data = await prisma.music.findMany({
+    where: {
+      artist,
+    },
+    orderBy: {
+      playCount: "desc",
+    },
+  });
+  return data;
+};
+
 export const getTrending = cache(async () => {
   const data = await prisma.music.findMany({
     orderBy: {

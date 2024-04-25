@@ -1,3 +1,4 @@
+import { Music } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -18,4 +19,12 @@ export const formatTime = (seconds?: number) => {
   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
 
   return formattedHours + formattedMinutes + formattedSeconds;
+};
+
+export const getMusicName = (music: Music) => {
+  return (
+    music.name ||
+    music.lyrics.slice(0, Math.min(50, music.lyrics.length)) ||
+    music.tags
+  );
 };
