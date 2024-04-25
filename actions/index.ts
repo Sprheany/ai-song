@@ -1,8 +1,6 @@
 "use server";
 
 import prisma from "@/prisma/client";
-import { Music } from "@prisma/client";
-import { unstable_noStore } from "next/cache";
 import { cache } from "react";
 
 export const getMusic = async (id: string) => {
@@ -23,21 +21,6 @@ export const getMusicByArtist = async (artist: string) => {
       playCount: "desc",
     },
   });
-  return data;
-};
-
-export const getRecommend = async () => {
-  unstable_noStore();
-
-  const trending = await getTrending();
-
-  const count = Math.min(5, trending.length);
-  const data: Music[] = [];
-  for (let i = 0; i < count; i++) {
-    const random = Math.floor(Math.random() * trending.length);
-    data.push(trending.splice(random, 1)[0]);
-  }
-
   return data;
 };
 
