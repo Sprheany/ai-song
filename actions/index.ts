@@ -2,6 +2,7 @@
 
 import prisma from "@/prisma/client";
 import { Music } from "@prisma/client";
+import { unstable_noStore } from "next/cache";
 import { cache } from "react";
 
 export const getMusic = async (id: string) => {
@@ -25,7 +26,9 @@ export const getMusicByArtist = async (artist: string) => {
   return data;
 };
 
-export const getRecommend = cache(async () => {
+export const getRecommend = async () => {
+  unstable_noStore();
+
   const trending = await getTrending();
 
   const count = Math.min(5, trending.length);
@@ -36,7 +39,7 @@ export const getRecommend = cache(async () => {
   }
 
   return data;
-});
+};
 
 export const getTrending = cache(async (page = 0, limit = 50) => {
   const data = await prisma.music.findMany({
