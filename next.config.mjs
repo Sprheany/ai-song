@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["imagedelivery.net", "cdn1.suno.ai"],
+    remotePatterns: [
+      { hostname: "imagedelivery.net" },
+      { hostname: "cdn1.suno.ai" },
+    ],
   },
 };
 

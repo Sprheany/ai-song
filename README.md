@@ -1,5 +1,5 @@
 <h1 align="center"">
-    AI Song
+    <img src="./public/logo.svg"/>
 </h1>
 
 This is an ai music website developed based on [Next.js](https://nextjs.org/). It uses [Suno AI](https://suno.com/) to generate music.
