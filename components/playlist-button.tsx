@@ -1,6 +1,6 @@
 "use client";
 
-import { formatTime } from "@/lib/utils";
+import { formatTime, getMusicName } from "@/lib/utils";
 import { usePlayerStore } from "@/store/player-store";
 import { Music } from "@prisma/client";
 import { ListMusic, Trash2 } from "lucide-react";
@@ -47,6 +47,7 @@ const PlaylistButton = ({ playlists, cleanPlaylist }: Props) => {
               </div>
               <div className="w-full flex flex-col gap-1">
                 {playlists.map((item, index) => {
+                  const name = getMusicName(item);
                   const isCurrentPlaying =
                     item.id === currentMusic?.id && isPlaying;
                   return (
@@ -62,7 +63,7 @@ const PlaylistButton = ({ playlists, cleanPlaylist }: Props) => {
                       <div className="min-w-4">{index + 1}</div>
                       <Image
                         src={item.coverImage}
-                        alt={`${item.name} cover image`}
+                        alt={`${name} cover image`}
                         width={32}
                         height={32}
                         className="rounded-md"
@@ -73,7 +74,7 @@ const PlaylistButton = ({ playlists, cleanPlaylist }: Props) => {
                           onClick={(e) => e.stopPropagation()}
                           className="text-sm line-clamp-1 hover:underline"
                         >
-                          {item.name}
+                          {name}
                         </Link>
                         <p className="text-xs opacity-50">
                           {formatTime(item.duration)}
