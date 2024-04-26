@@ -7,10 +7,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type Props = {
+  onNavClick?: () => void;
   className?: string;
 };
 
-const Sidebar = ({ className }: Props) => {
+const Sidebar = ({ className, onNavClick }: Props) => {
   const pathname = usePathname();
 
   return (
@@ -27,6 +28,7 @@ const Sidebar = ({ className }: Props) => {
                   key={item.name}
                   variant={pathname === item.href ? "secondary" : "ghost"}
                   className="w-full justify-start"
+                  onClick={onNavClick}
                   asChild
                 >
                   <Link href={item.href}>

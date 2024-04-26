@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,12 +8,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { useState } from "react";
 import Logo from "./logo";
 import Sidebar from "./sidebar";
 
 const SidebarMobile = () => {
+  const [open, onOpenChange] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         <Button variant={"ghost"} size={"icon"}>
           <Menu />
@@ -19,11 +24,15 @@ const SidebarMobile = () => {
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader>
-          <div className="px-6 py-4">
+          <Button
+            variant={"link"}
+            className="px-6 py-4 justify-start"
+            onClick={() => onOpenChange(false)}
+          >
             <Logo />
-          </div>
+          </Button>
         </SheetHeader>
-        <Sidebar className="h-full" />
+        <Sidebar className="h-full" onNavClick={() => onOpenChange(false)} />
       </SheetContent>
     </Sheet>
   );
