@@ -13,15 +13,26 @@ datasource db {
   url      = "file:./db.sqlite"
 }
 
+model Artist {
+  id    String  @id
+  name  String
+  Music Music[]
+}
+
 model Music {
-  id         String @id
-  name       String
-  artist     String
-  audioUrl   String
-  coverImage String
-  duration   Float
-  tags       String @default("")
-  lyrics     String @default("")
+  id            String @id
+  title         String
+  artistId      String
+  artistIdRef   Artist @relation(fields: [artistId], references: [id])
+  audioUrl      String
+  imageUrl      String
+  imageLargeUrl String @default("")
+  videoUrl      String @default("")
+  duration      Float
+  tags          String @default("")
+  lyrics        String @default("")
+
+  isPublish Boolean
 
   playCount   Int @default(0)
   upvoteCount Int @default(0)
