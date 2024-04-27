@@ -8,6 +8,7 @@ import {
   MicVocal,
   Radar,
   Rss,
+  Sparkles,
   User,
 } from "lucide-react";
 
@@ -64,6 +65,16 @@ export const sidebarLinks: SidebarGroup[] = [
         name: "Creations",
         href: "/creations",
         icon: MicVocal,
+      },
+    ],
+  },
+  {
+    title: "Tools",
+    items: [
+      {
+        name: "Create Music",
+        href: "/create",
+        icon: Sparkles,
       },
     ],
   },
