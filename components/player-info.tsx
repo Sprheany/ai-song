@@ -11,7 +11,7 @@ const PlayerInfo = ({ music, className }: Props) => {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Image
-        src={music.coverImage}
+        src={music.imageUrl}
         alt="music cover"
         width={60}
         height={60}
@@ -21,7 +21,7 @@ const PlayerInfo = ({ music, className }: Props) => {
         <p className="text-sm font-bold line-clamp-2 tracking-tight">
           {getMusicName(music)}
         </p>
-        <p className="text-sm opacity-50 line-clamp-1">{music.artist}</p>
+        <p className="text-sm opacity-50 line-clamp-1">{music.artistName}</p>
       </div>
     </div>
   );

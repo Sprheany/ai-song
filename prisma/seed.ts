@@ -1,5 +1,5 @@
 import { SunoResponse, sunoList, sunoRequest } from "@/data/suno";
-import { Artist, Music } from "@prisma/client";
+import { Music } from "@prisma/client";
 import prisma from "./client";
 
 const main = async () => {
@@ -13,7 +13,6 @@ const main = async () => {
       .map((item) => item.playlist_clips.map((item) => item.clip))
       .flat();
 
-    const artists: Artist[] = [];
     const songs: Music[] = [];
     clips.forEach((item) => {
       if (!item) return;
@@ -26,6 +25,7 @@ const main = async () => {
         id: item.id,
         title: item.title,
         artistId: item.user_id,
+        artistName: item.display_name,
         audioUrl: item.audio_url,
         imageUrl: item.image_url,
         imageLargeUrl: item.image_large_url,
@@ -43,21 +43,10 @@ const main = async () => {
       if (!songs.find((item) => item.id === song.id)) {
         songs.push(song);
       }
-
-      if (!artists.find((item) => item.id === song.artistId)) {
-        artists.push({
-          id: item.user_id,
-          name: item.display_name,
-        });
-      }
     });
 
-    await prisma.artist.deleteMany({});
-    let count = (await prisma.artist.createMany({ data: artists })).count;
-    console.log(`insert ${count} artists`);
-
     await prisma.music.deleteMany({});
-    count = (await prisma.music.createMany({ data: songs })).count;
+    const count = (await prisma.music.createMany({ data: songs })).count;
 
     console.log(`insert ${count} songs`);
   } catch (error) {

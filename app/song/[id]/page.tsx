@@ -21,7 +21,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
   }
 
   const name = getMusicName(music);
-  const moreMusics = (await getMusicByArtist(music.artist)).filter(
+  const moreMusics = (await getMusicByArtist(music.artistId)).filter(
     (item) => item.id !== id
   );
 
@@ -43,7 +43,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
       <div className="mt-8 flex flex-col space-y-4">
         <div className="flex gap-8 items-start">
           <Image
-            src={music.coverImage}
+            src={music.imageUrl}
             alt="music cover"
             width={160}
             height={160}
@@ -53,7 +53,7 @@ const Page = async ({ params: { id } }: { params: { id: string } }) => {
             <div className="flex items-center gap-8">
               <p className="text-lg flex items-center">
                 <CircleUserRound className="w-5 h-5 mr-1" />
-                {music.artist}
+                {music.artistName}
               </p>
               <p className="text-sm opacity-70">
                 {music.createdAt.toLocaleDateString()}

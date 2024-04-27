@@ -12,10 +12,10 @@ export const getMusic = async (id: string) => {
   return data;
 };
 
-export const getMusicByArtist = async (artist: string) => {
+export const getMusicByArtist = async (artistId: string) => {
   const data = await prisma.music.findMany({
     where: {
-      artist,
+      artistId,
     },
     orderBy: {
       playCount: "desc",

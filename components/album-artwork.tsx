@@ -27,12 +27,20 @@ export function AlbumArtwork({
 
   const isCurrentPlaying = album.id === currentMusic?.id && isPlaying;
   const name = getMusicName(album);
+  const coverImage =
+    width > 200
+      ? album.imageLargeUrl.length > 0
+        ? album.imageLargeUrl
+        : album.imageUrl
+      : album.imageUrl;
 
   return (
     <div className={cn("space-y-3", className)} {...props}>
       <div className={cn("relative group overflow-hidden rounded-md")}>
         <Image
-          src={album.coverImage}
+          src={
+            width > 200 ? album.imageLargeUrl ?? album.imageUrl : album.imageUrl
+          }
           alt={name}
           width={width}
           height={height}
@@ -62,7 +70,7 @@ export function AlbumArtwork({
           <h3 className="font-medium leading-none line-clamp-1">{name}</h3>
         </Link>
         <p className="text-sm text-muted-foreground line-clamp-1">
-          {album.artist}
+          {album.artistName}
         </p>
       </div>
     </div>

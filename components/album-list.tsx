@@ -57,7 +57,7 @@ const AlbumList = ({ musics, showNumber = true }: Props) => {
                 <TableCell className="w-28 h-28">
                   <div className="relative">
                     <Image
-                      src={item.coverImage}
+                      src={item.imageUrl}
                       alt={name}
                       width={80}
                       height={80}
@@ -87,7 +87,7 @@ const AlbumList = ({ musics, showNumber = true }: Props) => {
                       </h3>
                     </Link>
                     <p className="text-sm opacity-50 line-clamp-1">
-                      {item.artist}
+                      {item.artistName}
                     </p>
                   </div>
                 </TableCell>

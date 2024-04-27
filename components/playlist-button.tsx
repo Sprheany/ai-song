@@ -62,7 +62,7 @@ const PlaylistButton = ({ playlists, cleanPlaylist }: Props) => {
                     >
                       <div className="min-w-4">{index + 1}</div>
                       <Image
-                        src={item.coverImage}
+                        src={item.imageUrl}
                         alt={`${name} cover image`}
                         width={32}
                         height={32}

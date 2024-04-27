@@ -23,7 +23,7 @@ export const formatTime = (seconds?: number) => {
 
 export const getMusicName = (music: Music) => {
   return (
-    music.name ||
+    music.title ||
     music.lyrics.slice(0, Math.min(50, music.lyrics.length)) ||
     music.tags
   );

@@ -13,17 +13,11 @@ datasource db {
   url      = "file:./db.sqlite"
 }
 
-model Artist {
-  id    String  @id
-  name  String
-  Music Music[]
-}
-
 model Music {
   id            String @id
   title         String
   artistId      String
-  artistIdRef   Artist @relation(fields: [artistId], references: [id])
+  artistName    String
   audioUrl      String
   imageUrl      String
   imageLargeUrl String @default("")
