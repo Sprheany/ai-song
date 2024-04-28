@@ -14,17 +14,61 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MusicIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-const formSchema = z.object({
-  instrumental: z.boolean().default(false),
-  customMode: z.boolean().default(false),
-  prompt: z.string().optional(),
-  title: z.string().optional(),
-  lyrics: z.string().optional(),
-  tags: z.string().optional(),
-});
+const formSchema = z
+  .object({
+    instrumental: z.boolean().default(false),
+    customMode: z.boolean().default(false),
+    prompt: z.string().optional(),
+    title: z.string().optional(),
+    lyrics: z.string().optional(),
+    tags: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.customMode) {
+      if (data.instrumental) {
+        if (!data.prompt) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Prompt is required",
+            path: ["prompt"],
+          });
+        }
+      } else {
+        if (!data.lyrics) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Lyrics is required",
+            path: ["lyrics"],
+          });
+        }
+      }
+      if (!data.title) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Title is required",
+          path: ["title"],
+        });
+      }
+      if (!data.tags) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Style is required",
+          path: ["tags"],
+        });
+      }
+    } else {
+      if (!data.prompt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Prompt is required",
+          path: ["prompt"],
+        });
+      }
+    }
+  });
 
 type FormData = z.infer<typeof formSchema>;
 
@@ -33,44 +77,29 @@ const Studio = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const customMode = useWatch({
+    control: form.control,
+    name: "customMode",
+  });
+  const instrumental = useWatch({
+    control: form.control,
+    name: "instrumental",
+  });
+
   const onGenerateLyricsClick = async () => {
+    form.clearErrors();
     const prompt = form.watch("prompt");
     if (!prompt) {
       form.setError("prompt", { message: "Prompt is required" });
       return;
+    } else {
+      form.clearErrors();
     }
 
     console.log(prompt);
   };
 
   const onSubmit = (data: FormData) => {
-    if (data.customMode) {
-      if (data.instrumental) {
-        if (!data.prompt) {
-          form.setError("prompt", { message: "Prompt is required" });
-          return;
-        }
-      } else {
-        if (!data.lyrics) {
-          form.setError("lyrics", { message: "Lyrics is required" });
-          return;
-        }
-      }
-      if (!data.title) {
-        form.setError("title", { message: "Title is required" });
-        return;
-      }
-      if (!data.tags) {
-        form.setError("tags", { message: "Style is required" });
-        return;
-      }
-    } else {
-      if (!data.prompt) {
-        form.setError("prompt", { message: "Prompt is required" });
-        return;
-      }
-    }
-
     console.log(data);
   };
 
@@ -109,7 +138,7 @@ const Studio = () => {
           )}
         />
 
-        {form.watch("customMode") && !form.watch("instrumental") && (
+        {customMode && !instrumental && (
           <FormField
             control={form.control}
             name="lyrics"
@@ -148,7 +177,7 @@ const Studio = () => {
             </FormItem>
           )}
         />
-        {form.watch("customMode") && (
+        {customMode && (
           <>
             <FormField
               control={form.control}
