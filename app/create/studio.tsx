@@ -13,8 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MusicIcon } from "lucide-react";
+import { Loader2, MusicIcon } from "lucide-react";
+import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z
@@ -73,8 +75,19 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>;
 
 const Studio = () => {
+  const [pending, startTransition] = useTransition();
+  const [isCreating, startCreateTransition] = useTransition();
+
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      instrumental: false,
+      customMode: false,
+      prompt: "",
+      title: "",
+      lyrics: "",
+      tags: "",
+    },
   });
 
   const customMode = useWatch({
@@ -86,21 +99,37 @@ const Studio = () => {
     name: "instrumental",
   });
 
-  const onGenerateLyricsClick = async () => {
+  const onGenerateLyricsClick = () => {
     form.clearErrors();
     const prompt = form.watch("prompt");
     if (!prompt) {
       form.setError("prompt", { message: "Prompt is required" });
       return;
-    } else {
-      form.clearErrors();
     }
 
-    console.log(prompt);
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/generate_lyrics", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prompt }),
+        });
+        const data = await response.json();
+
+        form.setValue("title", data.title);
+        form.setValue("lyrics", data.text);
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    });
   };
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    startCreateTransition(async () => {
+      console.log(data);
+    });
   };
 
   return (
@@ -149,9 +178,13 @@ const Studio = () => {
                   <Button
                     size={"sm"}
                     type="button"
+                    disabled={pending}
                     onClick={onGenerateLyricsClick}
                   >
                     Generate Lyrics
+                    {pending && (
+                      <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                    )}
                   </Button>
                 </div>
                 <FormControl>
@@ -207,7 +240,7 @@ const Studio = () => {
             />
           </>
         )}
-        <Button type="submit">
+        <Button type="submit" disabled={isCreating}>
           Create <MusicIcon className="ml-2 h-5 w-5" />
         </Button>
       </form>

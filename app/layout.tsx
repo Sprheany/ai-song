@@ -2,6 +2,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { ThemeProvider } from "@/components/providers";
 import Sidebar from "@/components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
@@ -41,6 +42,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </ThemeProvider>
+          <Toaster />
           <Analytics />
         </body>
       </html>
