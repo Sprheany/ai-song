@@ -8,6 +8,7 @@ export interface AudioInfo {
   id: string; // Unique identifier for the audio
   title?: string; // Title of the audio
   image_url?: string; // URL of the image associated with the audio
+  image_large_url?: string;
   lyric?: string; // Lyrics of the audio
   audio_url?: string; // URL of the audio file
   video_url?: string; // URL of the video associated with the audio
@@ -18,7 +19,9 @@ export interface AudioInfo {
   status: string; // Status
   type?: string;
   tags?: string; // Genre of music.
-  duration?: string; // Duration of the audio
+  duration?: number; // Duration of the audio
+  play_count?: number;
+  upvote_count?: number;
 }
 
 class SunoApi {
@@ -91,7 +94,7 @@ class SunoApi {
       await sleep(1, 2);
     }
     const newToken = renewResponse.data["jwt"];
-    console.log("newToken:===\n\n", newToken);
+    // console.log("newToken:===\n\n", newToken);
     // Update Authorization field in request header with the new JWT token
     this.currentToken = newToken;
   }
@@ -244,6 +247,7 @@ class SunoApi {
         id: audio.id,
         title: audio.title,
         image_url: audio.image_url,
+        image_large_url: audio.image_large_url,
         lyric: audio.metadata.prompt,
         audio_url: audio.audio_url,
         video_url: audio.video_url,
@@ -254,7 +258,9 @@ class SunoApi {
         prompt: audio.metadata.prompt,
         type: audio.metadata.type,
         tags: audio.metadata.tags,
-        duration: audio.metadata.duration_formatted,
+        duration: audio.metadata.duration,
+        play_count: audio.play_count,
+        upvote_count: audio.upvote_count,
       }));
     }
   }
@@ -360,6 +366,7 @@ class SunoApi {
       id: audio.id,
       title: audio.title,
       image_url: audio.image_url,
+      image_large_url: audio.image_large_url,
       lyric: audio.metadata.prompt
         ? this.parseLyrics(audio.metadata.prompt)
         : "",
@@ -372,7 +379,9 @@ class SunoApi {
       prompt: audio.metadata.prompt,
       type: audio.metadata.type,
       tags: audio.metadata.tags,
-      duration: audio.metadata.duration_formatted,
+      duration: audio.metadata.duration,
+      play_count: audio.play_count,
+      upvote_count: audio.upvote_count,
     }));
   }
 

@@ -12,12 +12,13 @@ import { cn, getMusicName } from "@/lib/utils";
 import { CircleUserRound, Heart, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import Operator from "./operator";
 
 const Page = async ({ params: { id } }: { params: { id: string } }) => {
   const music = await getMusic(id);
   if (!music) {
-    return null;
+    return redirect("/404");
   }
 
   const name = getMusicName(music);

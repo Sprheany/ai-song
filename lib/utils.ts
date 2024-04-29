@@ -1,6 +1,7 @@
 import { Music } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { AudioInfo } from "./SunoApi";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -51,3 +52,26 @@ export const corsHeaders = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
+
+export const audio2Music = (
+  audio: AudioInfo,
+  artistId: string,
+  artistName: string
+) => ({
+  id: audio.id,
+  title: audio.title ?? "",
+  artistId: artistId,
+  artistName: artistName,
+  audioUrl: audio.audio_url ?? "",
+  imageUrl: audio.image_url ?? "",
+  imageLargeUrl: audio.image_large_url ?? "",
+  videoUrl: audio.video_url ?? "",
+  duration: audio.duration ?? 0,
+  lyrics: audio.lyric ?? "",
+  tags: audio.tags ?? "",
+  isPublish: false,
+  playCount: audio.play_count ?? 0,
+  upvoteCount: audio.upvote_count ?? 0,
+  createdAt: new Date(audio.created_at),
+  updatedAt: new Date(Date.now()),
+});

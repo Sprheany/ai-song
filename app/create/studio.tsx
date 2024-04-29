@@ -1,5 +1,6 @@
 "use client";
 
+import { upsertAudio } from "@/actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,8 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { AudioInfo } from "@/lib/SunoApi";
+import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, MusicIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -75,6 +79,9 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>;
 
 const Studio = () => {
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
   const [pending, startTransition] = useTransition();
   const [isCreating, startCreateTransition] = useTransition();
 
@@ -126,9 +133,51 @@ const Studio = () => {
     });
   };
 
-  const onSubmit = (data: FormData) => {
+  const generateMusic = (data: FormData) =>
+    fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: data.prompt,
+        make_instrumental: data.instrumental,
+        wait_audio: false,
+      }),
+    });
+
+  const customGenerateMusic = (data: FormData) =>
+    fetch("/api/custom_generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: data.lyrics || data.prompt,
+        title: data.title,
+        tags: data.tags,
+        make_instrumental: data.instrumental,
+        wait_audio: false,
+      }),
+    });
+
+  const onSubmit = (formData: FormData) => {
+    if (!isSignedIn) {
+      toast.error("Please sign in");
+      return;
+    }
     startCreateTransition(async () => {
-      console.log(data);
+      try {
+        const response = customMode
+          ? await customGenerateMusic(formData)
+          : await generateMusic(formData);
+        const data: AudioInfo[] = await response.json();
+        await upsertAudio(data);
+
+        router.refresh();
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     });
   };
 
