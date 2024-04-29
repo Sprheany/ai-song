@@ -83,11 +83,13 @@ export const getMyCreations = cache(async () => {
 
     const data: AudioInfo[] = await response.json();
 
-    await upsertAudio(data);
+    const completed = data.filter((item) => item.status === "completed");
+
+    await upsertAudio(completed);
 
     musics = [
-      ...musics.filter((item) => ids.includes(item.id)),
-      ...data.map((item) =>
+      ...musics.filter((item) => !ids.includes(item.id)),
+      ...completed.map((item) =>
         audio2Music(item, user.id, user.fullName || user.username || "")
       ),
     ];

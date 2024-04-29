@@ -175,6 +175,10 @@ const Studio = () => {
         await upsertAudio(data);
 
         router.refresh();
+
+        toast.success(
+          "Generated successfully! If you don't see the new music, please wait a few seconds and refresh the page."
+        );
       } catch (error: any) {
         toast.error(error.message);
       }
