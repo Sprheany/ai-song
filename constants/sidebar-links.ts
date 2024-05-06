@@ -1,5 +1,6 @@
 import { SidebarGroup } from "@/types/sidebar";
 import {
+  CreditCard,
   Flame,
   Heart,
   HistoryIcon,
@@ -65,6 +66,11 @@ export const sidebarLinks: SidebarGroup[] = [
         name: "Creations",
         href: "/creations",
         icon: MicVocal,
+      },
+      {
+        name: "Billing",
+        href: "/billing",
+        icon: CreditCard,
       },
     ],
   },

@@ -35,3 +35,21 @@ model Music {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Plan {
+  id                 String   @id @default(uuid())
+  productId          Int
+  productName        String
+  variantId          Int      @unique
+  name               String
+  description        String
+  price              String
+  isUsageBased       Boolean  @default(false)
+  interval           String?
+  intervalCount      Int?
+  trialInterval      String?
+  trialIntervalCount Int?
+  sort               Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

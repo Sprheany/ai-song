@@ -28,6 +28,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [Suno AI](https://suno.com)
 - [Next.js](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
+- [Clerk](https://clerk.com)
+- [Lemonsqueezy](https://www.lemonsqueezy.com)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Prisma](https://www.prisma.io/orm)
 - [suno-api](https://github.com/gcui-art/suno-api)
