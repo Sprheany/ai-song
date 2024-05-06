@@ -1,4 +1,7 @@
-import { lemonSqueezySetup } from "@lemonsqueezy/lemonsqueezy.js";
+import {
+  lemonSqueezySetup,
+  type Subscription,
+} from "@lemonsqueezy/lemonsqueezy.js";
 
 export function configLemonsqueezy() {
   const requiredVars = [
@@ -21,3 +24,6 @@ export function configLemonsqueezy() {
     },
   });
 }
+
+export type SubscriptionStatusType =
+  Subscription["data"]["attributes"]["status"];

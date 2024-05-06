@@ -1,3 +1,4 @@
+import { SubscriptionStatusType } from "@/config/lemonsqueezy";
 import { Music } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -86,4 +87,8 @@ export function formatPrice(priceInCents: string) {
     // Use minimumFractionDigits to handle cases like $59.00 -> $59
     minimumFractionDigits: dollars % 1 !== 0 ? 2 : 0,
   }).format(dollars);
+}
+
+export function isValidSubscription(status: SubscriptionStatusType) {
+  return status !== "cancelled" && status !== "expired" && status !== "unpaid";
 }

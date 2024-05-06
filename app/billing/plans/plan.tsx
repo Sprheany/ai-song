@@ -8,15 +8,21 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { formatPrice } from "@/lib/utils";
 import { NewPlan } from "@/prisma/client";
+import { LemonSqueezySubscription } from "@prisma/client";
 import PurchaseButton from "./purchase-button";
 
 type Props = {
   plan: NewPlan;
-  currentPlan?: NewPlan;
+  subscription?: LemonSqueezySubscription | null;
 };
 
-const Plan = ({ plan, currentPlan }: Props) => {
+const Plan = ({ plan, subscription }: Props) => {
   const { description, interval, name, price } = plan;
+  const message =
+    subscription?.planId === plan.id
+      ? `Renews on ${subscription?.renewsAt?.toLocaleDateString()}`
+      : "";
+
   return (
     <Card className="flex flex-col">
       <CardHeader>
@@ -36,16 +42,19 @@ const Plan = ({ plan, currentPlan }: Props) => {
         {description && (
           <div
             dangerouslySetInnerHTML={{ __html: description }}
-            className="pt-4 px-6 space-y-2 [&>ul]:list-disc "
+            className="pt-4 px-6 [&>ul]:list-disc [&>ul]:space-y-2"
           />
         )}
       </CardContent>
       <CardFooter>
-        <PurchaseButton
-          className="w-full"
-          plan={plan}
-          currentPlan={currentPlan}
-        />
+        <div className="w-full flex flex-col items-center gap-2">
+          <p className="text-sm opacity-50">{message}</p>
+          <PurchaseButton
+            className="w-full"
+            plan={plan}
+            subscription={subscription}
+          />
+        </div>
       </CardFooter>
     </Card>
   );

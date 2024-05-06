@@ -1,7 +1,11 @@
 "use server";
 
-import { configLemonsqueezy } from "@/config/lemonsqueezy";
+import {
+  SubscriptionStatusType,
+  configLemonsqueezy,
+} from "@/config/lemonsqueezy";
 import { webhookHasData, webhookHasMeta } from "@/lib/typeguards";
+import { isValidSubscription } from "@/lib/utils";
 import prisma, {
   NewPlan,
   NewSubscription,
@@ -14,8 +18,10 @@ import {
   getPrice,
   getProduct,
   listPrices,
+  updateSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 import { LemonSqueezyWebhookEvent } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const syncPlans = async () => {
   configLemonsqueezy();
@@ -146,6 +152,40 @@ export const getCheckoutURL = async (variantId: number, embed = false) => {
   return checkout.data?.data.attributes.url;
 };
 
+export const changePlan = async (currentPlanId: string, newPlanId: string) => {
+  configLemonsqueezy();
+
+  const userSubscription =
+    await prisma.lemonSqueezySubscription.findFirstOrThrow({
+      where: {
+        planId: currentPlanId,
+      },
+    });
+
+  const newPlan = await prisma.plan.findUniqueOrThrow({
+    where: {
+      id: newPlanId,
+    },
+  });
+
+  const updatedSub = await updateSubscription(userSubscription.lemonSqueezyId, {
+    variantId: newPlan.variantId,
+  });
+
+  await prisma.lemonSqueezySubscription.update({
+    where: {
+      lemonSqueezyId: userSubscription.lemonSqueezyId,
+    },
+    data: {
+      planId: newPlanId,
+      price: newPlan.price,
+      endsAt: updatedSub.data?.data.attributes.ends_at,
+    },
+  });
+
+  revalidatePath("/");
+};
+
 export const storeWebhookEvent = async (
   eventName: string,
   body: NewWebhookEvent["body"]
@@ -248,4 +288,23 @@ export const processWebhookEvent = async (
       },
     });
   }
+};
+
+export const getUserSubscription = async () => {
+  const user = await currentUser();
+  if (!user?.id) {
+    return null;
+  }
+
+  const subscriptions = await prisma.lemonSqueezySubscription.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+  const validSubscription = subscriptions.find((subscription) => {
+    const status = subscription.status as SubscriptionStatusType;
+    return isValidSubscription(status);
+  });
+
+  return validSubscription;
 };

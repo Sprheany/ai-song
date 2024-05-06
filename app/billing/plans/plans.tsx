@@ -1,5 +1,4 @@
-import { syncPlans } from "@/actions/payment";
-import { Separator } from "@/components/ui/separator";
+import { getUserSubscription, syncPlans } from "@/actions/payment";
 import prisma, { NewPlan } from "@/prisma/client";
 import Plan from "./plan";
 
@@ -18,16 +17,13 @@ const Plans = async () => {
     return a.sort - b.sort;
   });
 
+  const userSubscription = await getUserSubscription();
+
   return (
-    <div>
-      <h2 className="flex items-center gap-5">
-        Plans <Separator />
-      </h2>
-      <div className="mb-6 mt-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
-        {sortedPlans.map((plan, index) => {
-          return <Plan key={index} plan={plan} />;
-        })}
-      </div>
+    <div className="mb-6 mt-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5">
+      {sortedPlans.map((plan, index) => {
+        return <Plan key={index} plan={plan} subscription={userSubscription} />;
+      })}
     </div>
   );
 };
