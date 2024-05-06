@@ -1,3 +1,4 @@
+import LoginButton from "@/components/login-button";
 import {
   Card,
   CardContent,
@@ -47,14 +48,16 @@ const Plan = ({ plan, subscription }: Props) => {
         )}
       </CardContent>
       <CardFooter>
-        <div className="w-full flex flex-col items-center gap-2">
-          <p className="text-sm opacity-50">{message}</p>
-          <PurchaseButton
-            className="w-full"
-            plan={plan}
-            subscription={subscription}
-          />
-        </div>
+        <LoginButton className="w-full">
+          <div className="w-full flex flex-col items-center gap-2">
+            <p className="text-sm opacity-50">{message}</p>
+            <PurchaseButton
+              plan={plan}
+              subscription={subscription}
+              className="w-full"
+            />
+          </div>
+        </LoginButton>
       </CardFooter>
     </Card>
   );

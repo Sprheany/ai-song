@@ -1,6 +1,7 @@
 "use client";
 
 import { upsertAudio } from "@/actions";
+import LoginButton from "@/components/login-button";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { AudioInfo } from "@/lib/SunoApi";
-import { useAuth } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, MusicIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -79,7 +79,6 @@ const formSchema = z
 type FormData = z.infer<typeof formSchema>;
 
 const Studio = () => {
-  const { isSignedIn } = useAuth();
   const router = useRouter();
 
   const [pending, startTransition] = useTransition();
@@ -162,10 +161,6 @@ const Studio = () => {
     });
 
   const onSubmit = (formData: FormData) => {
-    if (!isSignedIn) {
-      toast.error("Please sign in");
-      return;
-    }
     startCreateTransition(async () => {
       try {
         const response = customMode
@@ -293,9 +288,11 @@ const Studio = () => {
             />
           </>
         )}
-        <Button type="submit" disabled={isCreating}>
-          Create <MusicIcon className="ml-2 h-5 w-5" />
-        </Button>
+        <LoginButton>
+          <Button type="submit" disabled={isCreating} className="w-full">
+            Create <MusicIcon className="ml-2 h-5 w-5" />
+          </Button>
+        </LoginButton>
       </form>
     </Form>
   );

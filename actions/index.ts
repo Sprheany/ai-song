@@ -41,7 +41,7 @@ export const upsertAudio = async (audios: AudioInfo[]) => {
   const user = await currentUser();
   const userId = user?.id;
   if (!userId) {
-    throw new Error("Please sign in");
+    throw new Error("Unauthorized");
   }
 
   const artistId = user.id;
@@ -57,7 +57,7 @@ export const getMyCreations = cache(async () => {
   const user = await currentUser();
   const userId = user?.id;
   if (!userId) {
-    throw new Error("Please sign in");
+    return [];
   }
 
   let musics = await prisma.music.findMany({

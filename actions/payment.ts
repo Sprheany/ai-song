@@ -119,7 +119,7 @@ export const syncPlans = async () => {
 export const getCheckoutURL = async (variantId: number, embed = false) => {
   const user = await currentUser();
   if (!user) {
-    throw new Error("Please sign in");
+    throw new Error("Unauthorized");
   }
 
   configLemonsqueezy();
