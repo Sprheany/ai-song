@@ -14,14 +14,57 @@ We have deployed an example website on Vercel, so you can see how it runs: [ai-s
 
 ## Run locally
 
-```bash
-git clone https://github.com/Sprheany/ai-song.git
-cd ai-song
-npm install
-npm run dev
-```
+1. obtain the cookie of your [Suno AI](https://suno.com) account
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   Locate the request that contains the keyword "client?\_clerk_js_version". Navigate to the Cookie section, hover your mouse over it, and copy the value of the Cookie.
+
+1. clone project
+
+   ```bash
+   git clone https://github.com/Sprheany/ai-song.git
+   ```
+
+1. install dependencies
+
+   ```bash
+   cd ai-song
+   npm install
+   ```
+
+1. init database
+
+    create your database and run `npm run db:push` to create tables
+
+1. set env variables
+
+   put `.env` under `ai-song` root dir with values list below
+
+   ```yaml
+   SUNO_TOKEN=
+
+   POSTGRES_PRISMA_URL=
+   POSTGRES_URL_NON_POOLING=
+
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+   CLERK_SECRET_KEY=
+
+   NEXT_PUBLIC_URL=
+
+   LEMONSQUEEZY_API_KEY=
+   LEMONSQUEEZY_STORE_ID=
+   LEMONSQUEEZY_PRODUCT_ID=
+   LEMONSQUEEZY_WEBHOOK_SECRET=
+   ```
+
+   SUNO_COOKIE is the cookie value you obtained in the first step
+
+1. run
+
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Thanks
 
