@@ -52,4 +52,34 @@ model Plan {
   sort               Int
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  subscriptions LemonSqueezySubscription[]
+}
+
+model LemonSqueezyWebhookEvent {
+  id              String   @id @default(uuid())
+  eventName       String
+  processed       Boolean  @default(false)
+  body            Json
+  createdAt       DateTime @default(now())
+  processingError String?
+}
+
+model LemonSqueezySubscription {
+  id             String    @id @default(uuid())
+  lemonSqueezyId String    @unique
+  orderId        Int
+  name           String
+  email          String
+  status         String
+  renewsAt       DateTime?
+  endsAt         DateTime?
+  trialEndsAt    DateTime?
+  price          String
+  isUsageBased   Boolean   @default(false)
+  isPaused       Boolean   @default(false)
+
+  userId String
+  planId String
+  Plan   Plan   @relation(fields: [planId], references: [id])
 }

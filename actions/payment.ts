@@ -1,14 +1,21 @@
 "use server";
 
 import { configLemonsqueezy } from "@/config/lemonsqueezy";
-import prisma, { NewPlan } from "@/prisma/client";
+import { webhookHasData, webhookHasMeta } from "@/lib/typeguards";
+import prisma, {
+  NewPlan,
+  NewSubscription,
+  NewWebhookEvent,
+} from "@/prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 import {
   Variant,
   createCheckout,
+  getPrice,
   getProduct,
   listPrices,
 } from "@lemonsqueezy/lemonsqueezy.js";
+import { LemonSqueezyWebhookEvent } from "@prisma/client";
 
 export const syncPlans = async () => {
   configLemonsqueezy();
@@ -137,4 +144,108 @@ export const getCheckoutURL = async (variantId: number, embed = false) => {
   );
 
   return checkout.data?.data.attributes.url;
+};
+
+export const storeWebhookEvent = async (
+  eventName: string,
+  body: NewWebhookEvent["body"]
+) => {
+  const returnedValue = await prisma.lemonSqueezyWebhookEvent.create({
+    data: {
+      eventName,
+      body,
+      processed: false,
+    },
+  });
+
+  return returnedValue;
+};
+
+export const processWebhookEvent = async (
+  webhookEvent: LemonSqueezyWebhookEvent
+) => {
+  configLemonsqueezy();
+
+  const dbWebhookEvent = await prisma.lemonSqueezyWebhookEvent.findMany({
+    where: {
+      id: webhookEvent.id,
+    },
+  });
+
+  if (dbWebhookEvent.length < 1) {
+    throw new Error(`Webhook Event ${webhookEvent.id} not found`);
+  }
+
+  let processingError = "";
+  const eventBody = webhookEvent.body;
+
+  if (!webhookHasMeta(eventBody)) {
+    processingError = "Event body is missing the 'meta' property";
+  } else if (webhookHasData(eventBody)) {
+    if (webhookEvent.eventName.startsWith("subscription_payment_")) {
+    } else if (webhookEvent.eventName.startsWith("subscription_")) {
+      const attributes = eventBody.data.attributes;
+      const variantId = attributes.variant_id as string;
+
+      const plan = await prisma.plan.findUnique({
+        where: {
+          variantId: parseInt(variantId, 10),
+        },
+      });
+      if (!plan) {
+        processingError = `Plan with variantId ${variantId} not found`;
+      } else {
+        const priceId = attributes.first_subscription_item.price_id;
+
+        const priceData = await getPrice(priceId);
+        if (priceData.error) {
+          processingError = `Failed to get the price data for the subscription ${eventBody.data.id}`;
+        }
+
+        const isUsageBased = attributes.first_subscription_item.is_usage_based;
+        const price = isUsageBased
+          ? priceData.data?.data.attributes.unit_price_decimal
+          : priceData.data?.data.attributes.unit_price;
+
+        const updateData: NewSubscription = {
+          lemonSqueezyId: eventBody.data.id,
+          orderId: attributes.order_id as number,
+          name: attributes.user_name as string,
+          email: attributes.user_email as string,
+          status: attributes.status as string,
+          renewsAt: attributes.renews_at as string,
+          endsAt: attributes.ends_at as string,
+          trialEndsAt: attributes.trial_ends_at as string,
+          price: price?.toString() ?? "",
+          isUsageBased,
+          isPaused: false,
+          userId: eventBody.meta.custom_data.user_id,
+          planId: plan.id,
+        };
+
+        try {
+          await prisma.lemonSqueezySubscription.upsert({
+            where: {
+              lemonSqueezyId: updateData.lemonSqueezyId,
+            },
+            create: updateData,
+            update: updateData,
+          });
+        } catch (error) {
+          processingError = `Failed to upsert Subscription ${updateData.lemonSqueezyId} to the database`;
+          console.error(error);
+        }
+      }
+    }
+
+    await prisma.lemonSqueezyWebhookEvent.update({
+      where: {
+        id: webhookEvent.id,
+      },
+      data: {
+        processed: true,
+        processingError,
+      },
+    });
+  }
 };
