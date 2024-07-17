@@ -33,13 +33,15 @@ We have deployed an example website on Vercel, so you can see how it runs: [ai-s
 
 1. init database
 
-    create your database and run `npm run db:push` to create tables
+   create your database and run `npm run db:push` to create tables, then run `npm run db:seed` to crawl data from Suno API
+
+   > Suno API is crawled through the official website, it may not work in the future.
 
 1. set env variables
 
    put `.env` under `ai-song` root dir with values list below
 
-   ```yaml
+   ```
    SUNO_TOKEN=
 
    POSTGRES_PRISMA_URL=

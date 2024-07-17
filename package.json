@@ -9,7 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
-    "seed": "tsx ./prisma/seed.ts"
+    "db:seed": "tsx ./prisma/seed.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.3",
