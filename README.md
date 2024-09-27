@@ -8,9 +8,11 @@ This is an ai music website developed based on [Next.js](https://nextjs.org/). I
 
 We have deployed an example website on Vercel, so you can see how it runs: [ai-song.vercel.app](https://ai-song.vercel.app)
 
+> The example site may not be able to generate music, the reason may be that the cookie is out of date, you can deploy and update the SUNO_COOKIE environment variable by yourself. If the suno api is still abnormal after updating the cookie, you can refer to [suno-api](https://github.com/gcui-art/suno-api) to fix it first.
+
 ## Deploy on Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSprheany%2Fai-song&env=SUNO_TOKEN&project-name=ai-song&repository-name=ai-song)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSprheany%2Fai-song&env=SUNO_COOKIE&project-name=ai-song&repository-name=ai-song)
 
 ## Run locally
 
@@ -42,7 +44,7 @@ We have deployed an example website on Vercel, so you can see how it runs: [ai-s
    put `.env` under `ai-song` root dir with values list below
 
    ```
-   SUNO_TOKEN=
+   SUNO_COOKIE=
 
    POSTGRES_PRISMA_URL=
    POSTGRES_URL_NON_POOLING=
